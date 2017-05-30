@@ -1,18 +1,30 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import logo from './logo.svg';
 import './App.css';
+
+
+// function CountriesSelect(props) {
+//   const countries = props.countries;
+//   const listItems = countries.map((country) =>
+//     <option name={country.alpha_3_code}>
+//       {country.name}
+//     </option>
+//   );
+//   return (
+//     <select value={this.state.value} onChange={this.handleChange}>{listItems}</select>
+//   );
+// }
+
 
 class VisaForm extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      initial: {
-        country_to : 1,
+      form: {
+        country_to : 3,
         citizen_of: "USA"
       },
-      countries: {},
-      movies: []
+      countries: []
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -28,41 +40,20 @@ class VisaForm extends React.Component {
     console.log('handling submit');
   }
 
-
-
-   getMoviesFromApiAsync() {
-     const url = 'https://facebook.github.io/react-native/movies.json';
-
-     return fetch(url)
+  getCountriesFromApiAsync() {
+    const url = 'http://gotorussia.app/reference/countries';
+    return fetch(url)
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log(responseJson.movies);
-        this.setState({movies: responseJson.movies});
+        this.setState({countries: responseJson.countries});
       })
       .catch((error) => {
         console.error(error);
       });
   }
 
-  getCountriesFromApiAsync() {
-
-    const url = 'http://gotorussia.app/reference/countries';
-
-   return fetch(url)
-     .then((response) => response.json())
-     .then((responseJson) => {
-       console.log(responseJson.countries);
-       this.setState({countries: responseJson.countries});
-     })
-     .catch((error) => {
-       console.error(error);
-     });
- }
-
   loadData() {
-    console.log('loading data');
     this.getCountriesFromApiAsync();
-    this.getMoviesFromApiAsync();
   }
 
   componentDidMount() {
@@ -70,16 +61,18 @@ class VisaForm extends React.Component {
   }
 
   render() {
+
+    const listCountries = this.state.countries.map((country) =>
+      <option key={country.id} value={country.id}>
+        {country.name}
+      </option>
+    );
+
     return (
       <form onSubmit={this.handleSubmit}>
         <label>
-          Countries: {this.state.countries.length}:
-          Movies: {this.state.movies.length}:
-          <select value={this.state.value} onChange={this.handleChange}>
-            <option value="grapefruit">Grapefruit</option>
-            <option value="lime">Lime</option>
-            <option value="coconut">Coconut</option>
-            <option value="mango">Mango</option>
+          <select value={this.state.form.country_to} onChange={this.handleChange}>
+            {listCountries}
           </select>
         </label>
         <input type="submit" value="Submit" />
