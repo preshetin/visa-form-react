@@ -32,7 +32,9 @@ class VisaForm extends React.Component {
   }
 
   handleChange(event) {
-    this.setState({value: event.target.value});
+    var form = this.state.form;
+    form.country_to = event.target.value;
+    this.setState({form: form});
   }
 
   handleSubmit(event) {
